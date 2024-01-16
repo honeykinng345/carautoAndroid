@@ -1,9 +1,12 @@
 package com.example.androidautodemo;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.car.app.CarContext;
 import androidx.car.app.CarToast;
 import androidx.car.app.Screen;
+import androidx.car.app.ScreenManager;
 import androidx.car.app.model.Action;
 import androidx.car.app.model.CarIcon;
 import androidx.car.app.model.ItemList;
@@ -19,14 +22,21 @@ import com.example.androidautodemo.templates.ListTemplateDemoScreen;
 
 public class CarScreen extends Screen {
 
+    static ScreenManager screenManager = null;
+    static CarContext carContextThis = null;
 
     protected CarScreen(@NonNull CarContext carContext) {
         super(carContext);
+        carContextThis = carContext;
+        screenManager = getScreenManager();
+
     }
 
+    @SuppressLint("RestrictedApi")
     @NonNull
     @Override
     public Template onGetTemplate() {
+
 
 //        Row row = new Row.Builder().setTitle("Hello world!").build();
 //

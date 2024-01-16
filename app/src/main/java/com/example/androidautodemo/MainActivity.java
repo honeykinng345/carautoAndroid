@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.androidautodemo.templates.ListTemplateDemoScreen;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,9 +35,11 @@ public class MainActivity extends AppCompatActivity {
         Button stopNavButton = findViewById(R.id.stop_nav);
         stopNavButton.setOnClickListener(this::stopNavigation);
         Button helloButton = findViewById(R.id.hello_nav);
-        helloButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        helloButton.setOnClickListener(view -> {
+            CarScreen.screenManager
+                    .push(
+                            new ListTemplateDemoScreen(CarScreen.carContextThis));
+
 //                Intent intent = new Intent(Intent.ACTION_VIEW)
 //                        .setComponent(new ComponentName(MainActivity.this, MyCarAppService.class));
 //
@@ -45,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 //                                CarPendingIntent.getCarApp(MainActivity.this, intent.hashCode(),
 //                                        intent,
 //                                        0));
-            }
         });
 
         new CarConnection(this).getType().observe(this,

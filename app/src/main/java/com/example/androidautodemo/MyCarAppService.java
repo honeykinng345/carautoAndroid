@@ -9,12 +9,14 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.car.app.CarAppService;
 import androidx.car.app.Screen;
+import androidx.car.app.ScreenManager;
 import androidx.car.app.Session;
 import androidx.car.app.model.Pane;
 import androidx.car.app.validation.HostValidator;
 
 
 public class MyCarAppService extends CarAppService {
+
     private final IBinder mBinder = new LocalBinder();
 
     public class LocalBinder extends Binder {
@@ -39,6 +41,7 @@ public class MyCarAppService extends CarAppService {
 
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     @NonNull
     public Session onCreateSession() {
