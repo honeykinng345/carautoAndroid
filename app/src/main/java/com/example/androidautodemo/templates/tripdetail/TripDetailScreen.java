@@ -2,10 +2,6 @@ package com.example.androidautodemo.templates.tripdetail;
 
 import static androidx.car.app.CarToast.LENGTH_LONG;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.car.app.CarContext;
@@ -26,10 +22,7 @@ import com.example.androidautodemo.nevigationtemplate.common.MyTrip;
 
 public final class TripDetailScreen extends Screen implements DefaultLifecycleObserver {
     private static final int MAX_LIST_ITEMS = 100;
-    @Nullable
-    private IconCompat mImage, mPaneImage;
-    @Nullable
-    private IconCompat mIcon;
+    private CarIcon ivTripStatus, ivPickUpNavigate, ivDropOffNavigate, ivAirPort, ivAmbulatory, ivWheelChair;
     private final MyTrip currentTrip;
 
     public TripDetailScreen(@NonNull CarContext carContext, MyTrip tripList) {
@@ -41,41 +34,46 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
     @Override
     public void onCreate(@NonNull LifecycleOwner owner) {
         DefaultLifecycleObserver.super.onCreate(owner);
-        Resources resources = getCarContext().getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.test_image_square);
-        mImage = IconCompat.createWithBitmap(bitmap);
-        mIcon = IconCompat.createWithResource(getCarContext(), R.drawable.ic_fastfood_white_48dp);
+        /*Resources resources = getCarContext().getResources();
+        Bitmap statusBitmap = BitmapFactory.decodeResource(resources, R.drawable.status_default);
+        IconCompat tripStatusIcon = IconCompat.createWithBitmap(statusBitmap);*/
 
-        Bitmap patioBitmap = BitmapFactory.decodeResource(resources, R.drawable.patio);
-        mPaneImage = IconCompat.createWithBitmap(patioBitmap);
+        CarIcon appIcon = new CarIcon.Builder(CarIcon.APP_ICON).build(); // Replace with the actual image resource
+
+        ivTripStatus = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.status_default)).build();
+        ivAirPort = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.airport_1)).build();
+        ivAmbulatory = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ambulatory_1)).build();
+        ivWheelChair = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.paratransit_1)).build();
+        ivPickUpNavigate = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.pupin)).build();
+        ivDropOffNavigate = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.dopin)).build();
     }
 
     @NonNull
     @Override
     public Template onGetTemplate() {
-        CarIcon tripStatusIcon = new CarIcon.Builder(CarIcon.APP_ICON).build(); // Replace with the actual image resource
-        CarIcon passengerIcon = new CarIcon.Builder(CarIcon.ALERT).build(); // Replace with the actual image resource
-
         // Concatenate the necessary information for each row
-        String passengerCountText = "Passenger Count: " + currentTrip.getAmbulatoryPassengerCount();
-        String confirmationNoText = "Confirmation No: " + currentTrip.getConfirmationNumber();
-        String pickupTimeText = "Pickup Time: " + currentTrip.getPickupTime();
-        String pickupZoneText = "Pickup Zone: " + currentTrip.getPickUpZone();
-        String estimatedCostText = "Estimated Cost: " + currentTrip.getEstimatedCost();
-        String dropDateText = "Drop Date: " + currentTrip.getDropOffDate();
-        String dropZoneText = "Drop Zone: " + currentTrip.getDropZone();
-        String milesText = "Miles: " + currentTrip.getEstimatedDistance();
+        String basicInfo = currentTrip.getPhoneNumber()
+                + "\n" + currentTrip.getConfirmationNumber()
+                + "\n" + currentTrip.getServiceId()
+                + "\n" + currentTrip.getPickupTime()
+                + "\nPassengers# " + currentTrip.getAmbulatoryPassengerCount()
+                + "\nParatransit# " + currentTrip.getParatransitCount();
+        String personName = "<font color='#f4f08c'>" + currentTrip.getPersonName() + "</font>"; // Example: Red color
+
+        String pickUpRemarks = currentTrip.getPickUpUnit()
+                + "\n" + currentTrip.getPickUpAddress()
+                + "\n" + currentTrip.getPickUpRemarks();
+        String dropOffRemarks = currentTrip.getDropOffUnit()
+                + "\n" + currentTrip.getDropOffAddress()
+                + "\n" + currentTrip.getDropOffRemarks();
 
         ItemList.Builder itemListBuilder = new ItemList.Builder()
-                .addItem(createRow(tripStatusIcon, currentTrip.getPersonName()))
-                .addItem(createRow(tripStatusIcon, passengerCountText))
-                .addItem(createRow(tripStatusIcon, confirmationNoText))
-                .addItem(createRow(tripStatusIcon, pickupTimeText))
-                .addItem(createRow(tripStatusIcon, pickupZoneText))
-                .addItem(createRow(tripStatusIcon, estimatedCostText))
-                .addItem(createRow(tripStatusIcon, dropDateText))
-                .addItem(createRow(tripStatusIcon, dropZoneText))
-                .addItem(createRow(tripStatusIcon, milesText));
+                .addItem(createRow(ivTripStatus, currentTrip.getPersonName(), basicInfo))
+                .addItem(createRow(ivPickUpNavigate, currentTrip.getDropOffPoiName(), pickUpRemarks))
+                .addItem(createRow(ivDropOffNavigate, currentTrip.getDropOffPoiName(), dropOffRemarks))
+                .addItem(createPaymentAndFundingRow())
+                //.addItem(createRow(null, "Estimate", "$" + currentTrip.getEstimatedCost() + " and " + currentTrip.getEstimatedDistance() + "Mi"))
+                .addItem(createEstimatesAndCopay());
 
         return new ListTemplate.Builder()
                 .setSingleList(itemListBuilder.build())
@@ -83,27 +81,44 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
                 .build();
     }
 
-    private Row createRow(CarIcon icon, String text) {
+    private Row createRow(@Nullable CarIcon icon, String title, String subTitle) {
         Row.Builder rowBuilder = new Row.Builder()
-                .setTitle("Title")  // Set a non-null title here
-                .setImage(icon)
-                .addText(text)
+                .setTitle(title != null ? title : "Default Title")  // Set a non-null title here
+                //.setImage(icon)
+                .addText(subTitle)
                 .setOnClickListener(() -> {
                     // Handle click event if needed
                 });
 
+        if (icon != null) {
+            rowBuilder.setImage(icon);
+        }
+
         return rowBuilder.build();
     }
 
-    /*private Row createTripRow(MyTrip trip) {
-        return new Row.Builder()
-                .setOnClickListener(ParkedOnlyOnClickListener.create(() -> onTripClick(trip)))
-                .setImage(new CarIcon.Builder(mIcon).build(), Row.IMAGE_TYPE_SMALL)
-                .setTitle(trip.getPersonName())
-                .setImage(new CarIcon.Builder(mIcon).build(), Row.IMAGE_TYPE_SMALL)
-                .addText("Details: " + trip.getAmbulatoryPassengerCount()) // Add relevant details
-                .build();
-    }*/
+    private Row createPaymentAndFundingRow() {
+        String paymentType = "Payment Type: " + currentTrip.getPaymentType();
+        String fundingSource = "Funding Source: " + currentTrip.getFundingSource();
+
+        Row.Builder rowBuilder = new Row.Builder()
+                .setTitle("Payment Type & Funding Source")
+                .addText(paymentType)
+                .addText(fundingSource);
+        return rowBuilder.build();
+    }
+
+    private Row createEstimatesAndCopay() {
+        String estimateCost = "$" + currentTrip.getEstimatedCost();
+        String estimatedDistance = " and " + currentTrip.getEstimatedCost() + "Mi";
+        String copayValue = "Copay: " + currentTrip.getCopay();
+
+        Row.Builder rowBuilder = new Row.Builder()
+                .setTitle("Estimates & Copay")
+                .addText(estimateCost + estimatedDistance)
+                .addText(copayValue);
+        return rowBuilder.build();
+    }
 
     private IconCompat getTripStatusIcon(MyTrip trip) {
         // Implement logic to get the appropriate icon based on trip status
