@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             trip1.setServiceId("12345");
             trip1.setParatransitCount(1);
             trip1.setPickUpPoiName("poi");
-            trip1.setPickUpAddress("Lahore, Punjab Pakistan");
+            trip1.setPickUpAddress("airport Lahore, Punjab Pakistan");
             trip1.setPickUpUnit("Unit#");
             trip1.setPickUpRemarks("It is good place to visit");
             trip1.setDropOffPoiName("poi");
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
             trip2.setPhoneNumber("03447161273");
             trip2.setServiceId("12345");
-            trip2.setParatransitCount(1);
+            trip2.setParatransitCount(2);
             trip2.setPickUpPoiName("poi");
             trip2.setPickUpAddress("Lahore, Punjab Pakistan");
             trip2.setPickUpUnit("Unit#");
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             trip3.setPhoneNumber("03447161273");
             trip3.setServiceId("12345");
-            trip3.setParatransitCount(1);
+            trip3.setParatransitCount(3);
             trip3.setPickUpPoiName("poi");
             trip3.setPickUpAddress("Lahore, Punjab Pakistan");
             trip3.setPickUpUnit("Unit#");

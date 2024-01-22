@@ -27,7 +27,6 @@ public class MyTrip {
     Boolean ambulatory;
     Boolean wheelChair;
 
-    int ambulatoryCount;
     int paratransitCount;
     int ambulatoryPassengerCount;
     double estimatedCost;
@@ -262,14 +261,6 @@ public class MyTrip {
 
     public void setWheelChair(Boolean wheelChair) {
         this.wheelChair = wheelChair;
-    }
-
-    public int getAmbulatoryCount() {
-        return ambulatoryCount;
-    }
-
-    public void setAmbulatoryCount(int ambulatoryCount) {
-        this.ambulatoryCount = ambulatoryCount;
     }
 
     public int getParatransitCount() {

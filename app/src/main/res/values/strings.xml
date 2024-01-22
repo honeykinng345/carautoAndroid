@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">androidAutoDemo</string>
+    <!-- Trip Action -->
+    <string name="trip_trip_actions">Trip Actions</string>
+    <string name="trip_notes">Trip Notes</string>
+    <string name="next_trip">Next Trip</string>
+    <string name="previous_trip">Previous Trip</string>
+    <string name="trip_at_location">AtLocation</string>
+    <string name="trip_pick_up">Pick Up</string>
+    <string name="trip_no_show">No Show</string>
+    <string name="trip_call_out">Call Out</string>
 
 
     <!-- Action Titles -->
