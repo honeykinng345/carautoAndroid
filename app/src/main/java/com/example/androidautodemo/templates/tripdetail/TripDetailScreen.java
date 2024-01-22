@@ -27,6 +27,7 @@ import com.example.androidautodemo.CarScreen;
 import com.example.androidautodemo.R;
 import com.example.androidautodemo.nevigationtemplate.common.MyTrip;
 import com.example.androidautodemo.nevigationtemplate.common.Utils;
+import com.example.androidautodemo.templates.NavigationTemplateDemoScreen;
 
 public final class TripDetailScreen extends Screen implements DefaultLifecycleObserver {
     private static final int MAX_LIST_ITEMS = 100;
@@ -242,6 +243,17 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         if (icon != null) {
             rowBuilder.setImage(icon);
         }
+        rowBuilder.setOnClickListener(() -> {
+            if (title != null && title.equalsIgnoreCase(currentTrip.getPickUpPoiName())) {
+                onClick("Navigate to Map");
+                getScreenManager()
+                        .push(
+                                new NavigationTemplateDemoScreen(
+                                        getCarContext()));
+            } else if (title != null && title.equalsIgnoreCase(currentTrip.getDropOffPoiName())) {
+                onClick("Navigate to Map for Drop-OFF");
+            }
+        });
         return rowBuilder.build();
     }
 

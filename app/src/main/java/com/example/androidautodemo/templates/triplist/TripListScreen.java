@@ -40,6 +40,7 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
     private IconCompat mImage;
     @Nullable
     private IconCompat mIcon;
+    private CarIcon ivTripStatus;
     private final List<MyTrip> tripList;
 
     public TripListScreen(@NonNull CarContext carContext, List<MyTrip> tripList) {
@@ -55,12 +56,12 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
         Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.test_image_square);
         mImage = IconCompat.createWithBitmap(bitmap);
         mIcon = IconCompat.createWithResource(getCarContext(), R.drawable.ic_fastfood_white_48dp);
+        ivTripStatus = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.status_default)).build();
     }
 
     @NonNull
     @Override
     public Template onGetTemplate() {
-        CarIcon tripStatusIcon = new CarIcon.Builder(CarIcon.APP_ICON).build(); // Replace with the actual image resource
         CarIcon passengerIcon = new CarIcon.Builder(CarIcon.ALERT).build(); // Replace with the actual image resource
         ItemList.Builder listBuilder = new ItemList.Builder();
         for (MyTrip trip : tripList) {
@@ -74,7 +75,7 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
                     + " | " + trip.getDropZone();
 
             Row.Builder rowBuilder = new Row.Builder()
-                    .setImage(tripStatusIcon)
+                    .setImage(ivTripStatus)
                     .setTitle(trip.getPersonName())
                     .addText(new CarText.Builder(rowText).build())
                     .setOnClickListener(ParkedOnlyOnClickListener.create(() -> onTripClick(trip)));
