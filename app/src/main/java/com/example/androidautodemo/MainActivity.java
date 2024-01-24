@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.car.app.connection.CarConnection;
 
 import com.example.androidautodemo.nevigationtemplate.common.MyTrip;
+import com.example.androidautodemo.templates.softmeter.FloatingSoftmeterOldScreen;
+import com.example.androidautodemo.templates.softmeter.FloatingSoftmeterScreen;
 import com.example.androidautodemo.templates.triplist.TripListScreen;
 
 import java.util.ArrayList;
@@ -98,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
 //                                        intent,
 //                                        0));
         });
+
+        stopNavButton.setOnClickListener(view-> CarScreen.screenManager
+                .push(new FloatingSoftmeterScreen(CarScreen.carContextThis)));
+        startNavButton.setOnClickListener(view-> CarScreen.screenManager
+                .push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)));
 
         new CarConnection(this).getType().observe(this,
                 this::onConnectionStateUpdate);

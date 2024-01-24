@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Connect"
+        android:text="SoftMeter A"
         android:visibility="visible" />
 
     <Button
@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Stop"
+        android:text="SoftMeter 2"
         android:visibility="visible" />
 
     <Button

@@ -169,18 +169,12 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
                 .build();
 
         // Concatenate the necessary information for each row
-        String basicInfo = currentTrip.getPhoneNumber()
-                + "\n" + currentTrip.getConfirmationNumber()
-                + "\n" + currentTrip.getServiceId()
-                + "\n" + currentTrip.getPickupTime()
-                + "\nAmbulatory# " + currentTrip.getAmbulatoryPassengerCount()
-                + "\nWheel Chair# " + currentTrip.getParatransitCount();
+        String basicInfo = currentTrip.getPhoneNumber() + "   "+ currentTrip.getConfirmationNumber() + "   " + currentTrip.getServiceId() + "   " + currentTrip.getPickupTime()
+                + "\nAmbulatory# " + currentTrip.getAmbulatoryPassengerCount() + "    Wheel Chair# " + currentTrip.getParatransitCount();
 
-        String pickUpRemarks = currentTrip.getPickUpUnit()
-                + "\n" + currentTrip.getPickUpAddress()
+        String pickUpRemarks = currentTrip.getPickUpUnit() + "   " + currentTrip.getPickUpAddress()
                 + "\n" + currentTrip.getPickUpRemarks();
-        String dropOffRemarks = currentTrip.getDropOffUnit()
-                + "\n" + currentTrip.getDropOffAddress()
+        String dropOffRemarks = currentTrip.getDropOffUnit() + "   " + currentTrip.getDropOffAddress()
                 + "\n" + currentTrip.getDropOffRemarks();
 
         ItemList.Builder itemListBuilder = new ItemList.Builder()
@@ -266,7 +260,7 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
                         getCarContext().getString(R.string.sign_in_with_google_title),
                         CarColor.createCustom(Color.BLACK, Color.BLACK), 0, 19))*/
                 .setTitle("Payment Type & Funding Source")
-                .addText(getColoredString(paymentType, true))
+                .addText(getColoredString(paymentType, YELLOW, true))
                 .addText(fundingSource);
         return rowBuilder.build();
     }
@@ -283,10 +277,10 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         return rowBuilder.build();
     }
 
-    private static CharSequence getColoredString(String str, boolean isEnabled) {
+    public static CharSequence getColoredString(String str, CarColor textColor, boolean isEnabled) {
         if (isEnabled && !str.isEmpty()) {
             SpannableString ss = new SpannableString(str);
-            Utils.colorize(ss, YELLOW, 0, str.length());
+            Utils.colorize(ss, textColor, 0, str.length());
             return ss;
         }
         return str;

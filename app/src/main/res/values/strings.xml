@@ -10,6 +10,15 @@
     <string name="trip_no_show">No Show</string>
     <string name="trip_call_out">Call Out</string>
 
+    <!-- Meter Action -->
+    <string name="meter_on"> Meter ON</string>
+    <string name="meter_off"> Meter OFF</string>
+    <string name="time_off"> Time OFF</string>
+    <string name="dist_off"> DIST OFF</string>
+    <string name="meter_fare">Fare</string>
+    <string name="meter_extra">Extra</string>
+    <string name="meter_status">For Hire</string>
+    <string name="meter_time_tick">Time Ticks</string>
 
     <!-- Action Titles -->
     <string name="back_caps_action_title">BACK</string>
