@@ -28,6 +28,7 @@ import com.example.androidautodemo.R;
 import com.example.androidautodemo.nevigationtemplate.common.MyTrip;
 import com.example.androidautodemo.nevigationtemplate.common.Utils;
 import com.example.androidautodemo.templates.NavigationTemplateDemoScreen;
+import com.example.androidautodemo.templates.softmeter.FloatingSoftmeterOldScreen;
 
 public final class TripDetailScreen extends Screen implements DefaultLifecycleObserver {
     private static final int MAX_LIST_ITEMS = 100;
@@ -139,8 +140,11 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         ActionStrip myActions = new ActionStrip.Builder()
                 .addAction(
                         new Action.Builder()
-                                .setOnClickListener(this::atLocation)
-                                .setTitle("AtLocation")
+                                .setOnClickListener(() -> {
+                                    CarScreen.screenManager
+                                            .push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis));
+                                })
+                                .setTitle("Softmeter")
                                 .build())
                 .addAction(
                         new Action.Builder()
@@ -169,7 +173,7 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
                 .build();
 
         // Concatenate the necessary information for each row
-        String basicInfo = currentTrip.getPhoneNumber() + "   "+ currentTrip.getConfirmationNumber() + "   " + currentTrip.getServiceId() + "   " + currentTrip.getPickupTime()
+        String basicInfo = currentTrip.getPhoneNumber() + "   " + currentTrip.getConfirmationNumber() + "   " + currentTrip.getServiceId() + "   " + currentTrip.getPickupTime()
                 + "\nAmbulatory# " + currentTrip.getAmbulatoryPassengerCount() + "    Wheel Chair# " + currentTrip.getParatransitCount();
 
         String pickUpRemarks = currentTrip.getPickUpUnit() + "   " + currentTrip.getPickUpAddress()
