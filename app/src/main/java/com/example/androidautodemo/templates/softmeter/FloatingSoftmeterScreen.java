@@ -16,7 +16,6 @@ import androidx.car.app.CarToast;
 import androidx.car.app.Screen;
 import androidx.car.app.model.Action;
 import androidx.car.app.model.ActionStrip;
-import androidx.car.app.model.CarColor;
 import androidx.car.app.model.CarIcon;
 import androidx.car.app.model.ItemList;
 import androidx.car.app.model.ListTemplate;
@@ -37,7 +36,7 @@ public final class FloatingSoftmeterScreen extends Screen implements DefaultLife
     @Nullable
     private IconCompat mPaneImage;
 
-    private CarIcon ivDecreaseExtra, ivIncreaseExtra;
+    private IconCompat ivDecreaseExtra, ivIncreaseExtra;
     private CarIcon ivStartTimeTicks, ivStopTimeTicks, ivSpeakerON, ivSpeakerOFF;
     private boolean isTimedTick = true;
     private boolean audioAnnouncementsON = true;
@@ -56,8 +55,8 @@ public final class FloatingSoftmeterScreen extends Screen implements DefaultLife
         Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.patio);
         mPaneImage = IconCompat.createWithBitmap(bitmap);
 
-        ivIncreaseExtra = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.collapse_icon)).build();
-        ivDecreaseExtra = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.expand_icon)).build();
+        ivIncreaseExtra = IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_increase);         //collapse_icon
+        ivDecreaseExtra = IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_decrease);         //expand_icon
         ivStopTimeTicks = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.checkbox_on)).build();
         ivStartTimeTicks = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.checkbox_off)).build();
         ivSpeakerON = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_volume_up_24)).build();
@@ -67,26 +66,24 @@ public final class FloatingSoftmeterScreen extends Screen implements DefaultLife
     @NonNull
     @Override
     public Template onGetTemplate() {
-        Row button1 = new Row.Builder()
-                .setTitle("Button 1")
+        Row MeterONBtn = new Row.Builder()
+                .setTitle("Meter ON")
                 .setOnClickListener(
                         () -> {
-                            // Handle click for Button 1
+                            meterON();
                             invalidate();
                         })
                 .build();
-
-        Row button2 = new Row.Builder()
-                .setTitle("Button 2")
+        Row TimeOFFBtn = new Row.Builder()
+                .setTitle("Time OFF")
                 .setOnClickListener(
                         () -> {
                             // Handle click for Button 2
                             invalidate();
                         })
                 .build();
-
-        Row button3 = new Row.Builder()
-                .setTitle("Button 3")
+        Row DistOFFBtn = new Row.Builder()
+                .setTitle("Dist OFF")
                 .setOnClickListener(
                         () -> {
                             // Handle click for Button 3
@@ -104,48 +101,28 @@ public final class FloatingSoftmeterScreen extends Screen implements DefaultLife
                             invalidate();
                         })
                 .build();
-        Row announcementsCheckbox = new Row.Builder()
-                .setTitle("Time Ticks")
-                .setImage(audioAnnouncementsON ? ivSpeakerOFF : ivSpeakerON)
-                .setOnClickListener(
-                        () -> {
-                            isTimedTick = !isTimedTick;
-                            invalidate();
-                        })
-                .build();
         CharSequence fareExtra = getColoredString("0.00                                                   0.00", RED, true);
-        ItemList.Builder itemListBuilder = new ItemList.Builder();/*.addItem(new Row.Builder()
-                        .setTitle("Fare              For Hire              Extra")
-                        .addText(fareExtra)
-                        //.addText("0.00                                                   0.00")
-                        .setImage(new CarIcon.Builder(speakerIcon).build())
-                        .build())*/
+        ItemList.Builder itemListBuilder = new ItemList.Builder();
         itemListBuilder.addItem(createHeader(new CarIcon.Builder(audioAnnouncementsON ? ivSpeakerOFF : ivSpeakerON).build(), "Fare              For Hire              Extra", fareExtra));
         itemListBuilder.addItem(timeTicksCheckbox);
         itemListBuilder.addItem(new Row.Builder().setTitle("0.00 Mi         0.00 Min").build());
 
-        itemListBuilder.addItem(button1);
-        itemListBuilder.addItem(button2);
-        itemListBuilder.addItem(button3);
+        itemListBuilder.addItem(MeterONBtn);
+        itemListBuilder.addItem(TimeOFFBtn);
+        itemListBuilder.addItem(DistOFFBtn);
 
         // Set the action strip.
         ActionStrip myActions = new ActionStrip.Builder()
                 .addAction(
                         new Action.Builder()
-                                .setOnClickListener(this::meterON)
-                                .setTitle("Meter ON")
+                                .setOnClickListener(this::decreaseExtra)
+                                .setIcon(new CarIcon.Builder(ivDecreaseExtra).build())
+                                .setTitle("Extra")
                                 .build())
                 .addAction(
                         new Action.Builder()
-                                .setOnClickListener(this::timeOFF)
-                                //.setTitle("No Show")
-                                .setIcon(
-                                        new CarIcon.Builder(
-                                                IconCompat.createWithResource(
-                                                        getCarContext(),
-                                                        R.drawable.status_no_show_req))
-                                                .setTint(CarColor.SECONDARY)
-                                                .build())
+                                .setOnClickListener(this::increaseExtra)
+                                .setIcon(new CarIcon.Builder(ivIncreaseExtra).build())
                                 .build())
                 /*.addAction(
                         new Action.Builder()
@@ -163,29 +140,8 @@ public final class FloatingSoftmeterScreen extends Screen implements DefaultLife
                 .setSingleList(itemListBuilder.build())
                 .setHeaderAction(Action.BACK)
                 .setActionStrip(myActions)
-                /*.setActionStrip(
-                        new ActionStrip.Builder()
-                                .addAction(new Action.Builder()
-                                        .setTitle(getCarContext().getString(
-                                                R.string.meter_extra))
-                                        .setIcon(new CarIcon.Builder(ivDecreaseExtra)
-                                                .build())
-                                        .setOnClickListener(this::decreaseExtra)
-                                        .build())
-                                .addAction(
-                                        new Action.Builder()
-                                                .setOnClickListener(this::increaseExtra)
-                                                .setIcon(new CarIcon.Builder(ivIncreaseExtra).build())
-                                                .build())
-                                .build())*/
                 .setTitle("Softmeter")
                 .build();
-    }
-
-    private void handleButtonClick(Object view) {
-        if(view==view){
-
-        }
     }
 
     private Row createHeader(CarIcon icon, String title, CharSequence subTitle) {

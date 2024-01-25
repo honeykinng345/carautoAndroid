@@ -140,18 +140,13 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         ActionStrip myActions = new ActionStrip.Builder()
                 .addAction(
                         new Action.Builder()
-                                .setOnClickListener(() -> {
-                                    CarScreen.screenManager
-                                            .push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis));
-                                })
+                                .setOnClickListener(() -> CarScreen.screenManager
+                                        .push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)))
                                 .setTitle("Softmeter")
                                 .build())
                 .addAction(
                         new Action.Builder()
-                                .setOnClickListener(() -> {
-                                    onClick("No Show");
-                                })
-                                //.setTitle("No Show")
+                                .setOnClickListener(() -> onClick("No Show"))
                                 .setIcon(
                                         new CarIcon.Builder(
                                                 IconCompat.createWithResource(
