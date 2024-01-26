@@ -7,12 +7,9 @@ import static androidx.car.app.model.Action.FLAG_PRIMARY;
 import static androidx.car.app.model.CarColor.RED;
 import static com.example.androidautodemo.templates.tripdetail.TripDetailScreen.getColoredString;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.car.app.CarContext;
 import androidx.car.app.CarToast;
 import androidx.car.app.Screen;
@@ -36,11 +33,8 @@ import com.example.androidautodemo.R;
  * details screen.
  */
 public final class FloatingSoftmeterOldScreen extends Screen implements DefaultLifecycleObserver {
-    @Nullable
-    private IconCompat mPaneImage;
-
-    private IconCompat ivDecreaseExtra, ivIncreaseExtra;
-    private CarIcon ivStartTimeTicks, ivStopTimeTicks, ivSpeakerON, ivSpeakerOFF;
+    private CarColor noTint;
+    private CarIcon ivStartTimeTicks, ivStopTimeTicks, ivSpeakerON, ivSpeakerOFF, ivIncreaseExtra, ivDecreaseExtra;
 
     public FloatingSoftmeterOldScreen(@NonNull CarContext carContext) {
         super(carContext);
@@ -49,12 +43,9 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
 
     @Override
     public void onCreate(@NonNull LifecycleOwner owner) {
-        Resources resources = getCarContext().getResources();
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.patio);
-        mPaneImage = IconCompat.createWithBitmap(bitmap);
-
-        ivIncreaseExtra = IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_increase);         //collapse_icon
-        ivDecreaseExtra = IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_decrease);         //expand_icon
+        noTint = CarColor.createCustom(Color.TRANSPARENT, Color.TRANSPARENT);
+        ivIncreaseExtra = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.collapse_icon)).build();
+        ivDecreaseExtra = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.expand_icon)).build();
         ivStopTimeTicks = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.checkbox_on)).build();
         ivStartTimeTicks = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.checkbox_off)).build();
         ivSpeakerON = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_volume_up_24)).build();
@@ -111,13 +102,17 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
                                 .addAction(new Action.Builder()
                                         .setTitle(getCarContext().getString(
                                                 R.string.meter_extra))
-                                        .setIcon(new CarIcon.Builder(ivDecreaseExtra).build())
+                                        .setIcon(new CarIcon.Builder(ivDecreaseExtra)
+                                                .setTint(noTint)
+                                                .build())
                                         .setOnClickListener(this::decreaseExtra)
                                         .build())
                                 .addAction(
                                         new Action.Builder()
                                                 .setOnClickListener(this::increaseExtra)
-                                                .setIcon(new CarIcon.Builder(ivIncreaseExtra).build())
+                                                .setIcon(new CarIcon.Builder(ivIncreaseExtra)
+                                                        .setTint(noTint)
+                                                        .build())
                                                 .build())
                                 .build())
                 .setTitle("Softmeter")

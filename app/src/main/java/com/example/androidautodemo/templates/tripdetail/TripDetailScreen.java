@@ -3,6 +3,7 @@ package com.example.androidautodemo.templates.tripdetail;
 import static androidx.car.app.CarToast.LENGTH_LONG;
 import static androidx.car.app.model.CarColor.YELLOW;
 
+import android.graphics.Color;
 import android.text.SpannableString;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,8 @@ import java.util.Locale;
 
 public final class TripDetailScreen extends Screen implements DefaultLifecycleObserver {
     private static final int MAX_LIST_ITEMS = 100;
-    private CarIcon ivTripStatus, ivPickUpNavigate, ivDropOffNavigate, ivAirPort, ivAmbulatory, ivWheelChair;
+    private CarIcon ivTripStatus, ivPickUpNavigate, ivDropOffNavigate, ivSoftmeter, ivAirPort, ivAmbulatory, ivWheelChair;
+    private CarColor noTint;
     private final MyTrip currentTrip;
 
     public TripDetailScreen(@NonNull CarContext carContext, MyTrip tripList) {
@@ -51,8 +53,8 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         Bitmap statusBitmap = BitmapFactory.decodeResource(resources, R.drawable.status_default);
         IconCompat tripStatusIcon = IconCompat.createWithBitmap(statusBitmap);*/
 
-        CarIcon appIcon = new CarIcon.Builder(CarIcon.APP_ICON).build(); // Replace with the actual image resource
-
+        noTint = CarColor.createCustom(Color.TRANSPARENT, Color.TRANSPARENT);
+        ivSoftmeter = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.softmeter)).build();
         ivTripStatus = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.status_default)).build();
         ivAirPort = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.airport_1)).build();
         ivAmbulatory = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ambulatory_1)).build();
@@ -99,19 +101,16 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
     @NonNull
     @Override
     public Template onGetTemplate() {
-        // Set the action strip.
         ActionStrip myActions = new ActionStrip.Builder()
                 .addAction(new Action.Builder()
-                        .setOnClickListener(() -> CarScreen.screenManager.push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)))
-                        .setTitle("Softmeter")
+                        .setOnClickListener(this::atLocation)
+                        .setTitle("AtLocation")
                         .build())
                 .addAction(new Action.Builder()
-                        .setOnClickListener(() -> onClick("No Show"))
-                        .setIcon(new CarIcon.Builder(
-                                IconCompat.createWithResource(
-                                        getCarContext(),
-                                        R.drawable.status_no_show_req))
-                                .setTint(CarColor.SECONDARY).build())
+                        .setIcon(new CarIcon.Builder(ivSoftmeter)
+                                .setTint(noTint)
+                                .build())
+                        .setOnClickListener(() -> CarScreen.screenManager.push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)))
                         .build())
                 .build();
 
