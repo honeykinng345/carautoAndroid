@@ -28,7 +28,10 @@ import com.example.androidautodemo.R;
 import com.example.androidautodemo.nevigationtemplate.common.MyTrip;
 import com.example.androidautodemo.nevigationtemplate.common.Utils;
 import com.example.androidautodemo.templates.NavigationTemplateDemoScreen;
+import com.example.androidautodemo.templates.map.PlaceListNavigationTemplateDemoScreen;
 import com.example.androidautodemo.templates.softmeter.FloatingSoftmeterOldScreen;
+
+import java.util.Locale;
 
 public final class TripDetailScreen extends Screen implements DefaultLifecycleObserver {
     private static final int MAX_LIST_ITEMS = 100;
@@ -96,79 +99,24 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
     @NonNull
     @Override
     public Template onGetTemplate() {
-        /*NavigationTemplate.Builder builder = new NavigationTemplate.Builder();
-        builder.setBackgroundColor(CarColor.SECONDARY);
-        // Set the action strip.
-        ActionStrip.Builder actionStripBuilder = new ActionStrip.Builder();
-        actionStripBuilder.addAction(
-                new Action.Builder()
-                        .setIcon(
-                                new CarIcon.Builder(
-                                        IconCompat.createWithResource(
-                                                getCarContext(),
-                                                R.drawable.pupin))
-                                        .build())
-                        .setOnClickListener(this::callOut)
-                        .build());
-        actionStripBuilder.addAction(new Action.Builder()
-                .setIcon(
-                        new CarIcon.Builder(
-                                IconCompat.createWithResource(
-                                        getCarContext(), R.drawable.banana))
-                                .build())
-                .setOnClickListener(
-                        () -> {
-                            onClick("Settings");
-                        })
-                .build());
-        actionStripBuilder.addAction(
-                new Action.Builder()
-                        .setTitle("Voice")
-                        .setIcon(new CarIcon.Builder(
-                                IconCompat.createWithResource(getCarContext(),
-                                        R.drawable.dopin)).build()).setOnClickListener(
-                                this::atLocation)
-                        .build());
-        actionStripBuilder.addAction(
-                new Action.Builder()
-                        .setTitle("Stop")
-                        .setOnClickListener(this::atLocation)
-                        .build());
-        builder.setActionStrip(actionStripBuilder.build());*/
-
         // Set the action strip.
         ActionStrip myActions = new ActionStrip.Builder()
-                .addAction(
-                        new Action.Builder()
-                                .setOnClickListener(() -> CarScreen.screenManager
-                                        .push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)))
-                                .setTitle("Softmeter")
-                                .build())
-                .addAction(
-                        new Action.Builder()
-                                .setOnClickListener(() -> onClick("No Show"))
-                                .setIcon(
-                                        new CarIcon.Builder(
-                                                IconCompat.createWithResource(
-                                                        getCarContext(),
-                                                        R.drawable.status_no_show_req))
-                                                .setTint(CarColor.SECONDARY)
-                                                .build())
-                                .build())
-                /*.addAction(
-                        new Action.Builder()
-                                .setOnClickListener(this::callOut)
-                                .setIcon(
-                                        new CarIcon.Builder(
-                                                IconCompat.createWithResource(
-                                                        getCarContext(),
-                                                        R.drawable.pupin))
-                                                .build())
-                                .build())*/
+                .addAction(new Action.Builder()
+                        .setOnClickListener(() -> CarScreen.screenManager.push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)))
+                        .setTitle("Softmeter")
+                        .build())
+                .addAction(new Action.Builder()
+                        .setOnClickListener(() -> onClick("No Show"))
+                        .setIcon(new CarIcon.Builder(
+                                IconCompat.createWithResource(
+                                        getCarContext(),
+                                        R.drawable.status_no_show_req))
+                                .setTint(CarColor.SECONDARY).build())
+                        .build())
                 .build();
 
         // Concatenate the necessary information for each row
-        String basicInfo = currentTrip.getPhoneNumber() + "   " + currentTrip.getConfirmationNumber() + "   " + currentTrip.getServiceId() + "   " + currentTrip.getPickupTime()
+        String basicInfo = currentTrip.getConfirmationNumber() + "   " + currentTrip.getServiceId() + "   " + currentTrip.getPickupTime()
                 + "\nAmbulatory# " + currentTrip.getAmbulatoryPassengerCount() + "    Wheel Chair# " + currentTrip.getParatransitCount();
 
         String pickUpRemarks = currentTrip.getPickUpUnit() + "   " + currentTrip.getPickUpAddress()
@@ -177,10 +125,8 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
                 + "\n" + currentTrip.getDropOffRemarks();
 
         ItemList.Builder itemListBuilder = new ItemList.Builder()
-                .addItem(createRow(ivTripStatus, currentTrip.getPersonName(), basicInfo))
-                //.addItem(createRow(ivAirPort, " ", ""))
+                .addItem(createRow(ivTripStatus, currentTrip.getPersonName() + "(" + currentTrip.getPhoneNumber() + ")", basicInfo))
                 //.addItem(createRow(ivAmbulatory, String.valueOf(currentTrip.getAmbulatoryPassengerCount()), ""))
-                //.addItem(createRow(ivWheelChair, String.valueOf(currentTrip.getParatransitCount()), ""))
                 .addItem(createRow(ivPickUpNavigate, currentTrip.getDropOffPoiName(), pickUpRemarks))
                 .addItem(createRow(ivDropOffNavigate, currentTrip.getDropOffPoiName(), dropOffRemarks))
                 .addItem(createPaymentAndFundingRow())
@@ -189,12 +135,19 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
 
         // Add Trip Actions
         ItemList.Builder tripActionsBuilder = new ItemList.Builder();
-        tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_notes)));
-        tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.next_trip)));
-        tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.previous_trip)));
-        tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_at_location)));
-        tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_no_show)));
-        tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_call_out)));
+        //tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_notes)));
+
+        if (currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_picked_up))) {
+            tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.complete_trip)));
+        } else {
+            tripActionsBuilder.addItem(buildRow(currentTrip.getTripStatus()));
+            tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_no_show)));
+            tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_call_out)));
+        }
+        if (!currentTrip.getManifestNumber().isEmpty()) {
+            tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.previous_trip)));
+            tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.next_trip)));
+        }
 
         return new ListTemplate.Builder()
                 .addSectionedList(SectionedItemList.create(
@@ -237,7 +190,7 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
             rowBuilder.setImage(icon);
         }
         rowBuilder.setOnClickListener(() -> {
-            if (title != null && title.equalsIgnoreCase(currentTrip.getPickUpPoiName())) {
+            if (title != null && !title.equalsIgnoreCase(currentTrip.getPickUpPoiName())) {
                 onClick("Navigate to Map");
                 getScreenManager()
                         .push(
@@ -245,34 +198,33 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
                                         getCarContext()));
             } else if (title != null && title.equalsIgnoreCase(currentTrip.getDropOffPoiName())) {
                 onClick("Navigate to Map for Drop-OFF");
+                CarScreen.screenManager
+                        .push(new PlaceListNavigationTemplateDemoScreen(CarScreen.carContextThis));
             }
         });
         return rowBuilder.build();
     }
 
     private Row createPaymentAndFundingRow() {
-        String paymentType = "Payment Type: " + currentTrip.getPaymentType();
-        String fundingSource = "Funding Source: " + currentTrip.getFundingSource();
-
+        String typeAndSource = currentTrip.getPaymentType() + "                                   " + currentTrip.getFundingSource();
         Row.Builder rowBuilder = new Row.Builder()
-                /*.setTitle(Utils.colorize(
-                        getCarContext().getString(R.string.sign_in_with_google_title),
-                        CarColor.createCustom(Color.BLACK, Color.BLACK), 0, 19))*/
-                .setTitle("Payment Type & Funding Source")
-                .addText(getColoredString(paymentType, YELLOW, true))
-                .addText(fundingSource);
+                .setTitle("Payment Type            Funding Source")
+                .addText(getColoredString(typeAndSource, YELLOW, true));
         return rowBuilder.build();
     }
 
     private Row createEstimatesAndCopay() {
-        String estimateCost = "$" + currentTrip.getEstimatedCost();
-        String estimatedDistance = " and " + currentTrip.getEstimatedCost() + "Mi";
-        String copayValue = "Copay: " + currentTrip.getCopay();
-
+        String estimateCostAndDistance = "$" + currentTrip.getEstimatedCost() + " and " + currentTrip.getEstimatedCost() + "Mi";
+        String copayLabel = "";
+        String copayValue = "";
+        if (currentTrip.getCopay() > 0) {
+            copayLabel = "                    Copay";
+            copayValue = "           " + String.format(Locale.US, "%.2f", currentTrip.getCopay());
+        }
         Row.Builder rowBuilder = new Row.Builder()
-                .setTitle("Estimates & Copay")
-                .addText(estimateCost + estimatedDistance)
-                .addText(copayValue);
+                .setTitle("Estimates" + copayLabel)
+                //.addText(estimateCostAndDistance+ "          "+currentTrip.getCopay())
+                .addText(getColoredString(estimateCostAndDistance + copayValue, YELLOW, true));
         return rowBuilder.build();
     }
 

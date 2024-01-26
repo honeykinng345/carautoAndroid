@@ -1,31 +1,20 @@
-/*
- * Copyright (C) 2021 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.example.androidautodemo.templates.map;
 
-package com.example.androidautodemo.nevigationtemplate.common;
-
+import static androidx.car.app.CarToast.LENGTH_LONG;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 
 import androidx.annotation.NonNull;
 import androidx.car.app.CarContext;
+import androidx.car.app.CarToast;
+import androidx.car.app.HostException;
 import androidx.car.app.Screen;
 import androidx.car.app.constraints.ConstraintManager;
 import androidx.car.app.model.CarColor;
@@ -48,9 +37,13 @@ import com.example.androidautodemo.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Provides sample place data used in the demos. */
+/**
+ * Provides sample place data used in the demos.
+ */
 public class SamplePlaces {
-    /** The location to use as an anchor for calculating distances. */
+    /**
+     * The location to use as an anchor for calculating distances.
+     */
     private final Location mAnchorLocation;
 
     private final List<PlaceInfo> mPlaces;
@@ -68,7 +61,9 @@ public class SamplePlaces {
         mPlaces = getSamplePlaces(carContext);
     }
 
-    /** Create an instance of {@link SamplePlaces}. */
+    /**
+     * Create an instance of {@link SamplePlaces}.
+     */
     @NonNull
     public static SamplePlaces create(@NonNull Screen demoScreen) {
         return new SamplePlaces(demoScreen);
@@ -241,7 +236,9 @@ public class SamplePlaces {
         return places;
     }
 
-    /** Return the {@link ItemList} of the sample places. */
+    /**
+     * Return the {@link ItemList} of the sample places.
+     */
     @NonNull
     public ItemList getPlaceList() {
         ItemList.Builder listBuilder = new ItemList.Builder();
@@ -310,14 +307,32 @@ public class SamplePlaces {
         return listBuilder.build();
     }
 
-    /** Returns the distance in meters of the {@code location} from the current location. */
+    /**
+     * Returns the distance in meters of the {@code location} from the current location.
+     */
     private int getDistanceFromCurrentLocation(Location location) {
         return (int) mAnchorLocation.distanceTo(location);
     }
 
     private void onClickPlace(PlaceInfo place) {
-        mDemoScreen
+        onClickNavigate(place);
+        /*mDemoScreen
                 .getScreenManager()
-                .push(PlaceDetailsScreen.create(mDemoScreen.getCarContext(), place));
+                .push(PlaceDetailsScreen.create(mDemoScreen.getCarContext(), place));*/
+    }
+
+    private void onClickNavigate(PlaceInfo place) {
+        Uri uri = Uri.parse("geo:0,0?q=" + place.address);
+        Intent intent = new Intent(CarContext.ACTION_NAVIGATE, uri);
+
+        try {
+            mDemoScreen.getCarContext().startCarApp(intent);
+        } catch (HostException e) {
+            CarToast.makeText(
+                            mDemoScreen.getCarContext(),
+                            mDemoScreen.getCarContext().getString(R.string.fail_start_nav),
+                            LENGTH_LONG)
+                    .show();
+        }
     }
 }

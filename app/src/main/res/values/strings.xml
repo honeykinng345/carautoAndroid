@@ -5,8 +5,11 @@
     <string name="trip_notes">Trip Notes</string>
     <string name="next_trip">Next Trip</string>
     <string name="previous_trip">Previous Trip</string>
+    <string name="trip_irtpu">IRTPU</string>
     <string name="trip_at_location">AtLocation</string>
     <string name="trip_pick_up">Pick Up</string>
+    <string name="trip_picked_up">PickedUp</string>
+    <string name="complete_trip">Complete Trip</string>
     <string name="trip_no_show">No Show</string>
     <string name="trip_call_out">Call Out</string>
 

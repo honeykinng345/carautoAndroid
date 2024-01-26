@@ -62,12 +62,11 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
     @NonNull
     @Override
     public Template onGetTemplate() {
-        CarIcon passengerIcon = new CarIcon.Builder(CarIcon.ALERT).build(); // Replace with the actual image resource
         ItemList.Builder listBuilder = new ItemList.Builder();
         for (MyTrip trip : tripList) {
             // Concatenate the necessary information for each row
-            String rowText = " Passenger#" + trip.getAmbulatoryPassengerCount()
-                    + "  Conf#" + trip.getConfirmationNumber()
+            String rowText = " Conf#" + trip.getConfirmationNumber()
+                           + " | Passenger#" + trip.getAmbulatoryPassengerCount()
                     + "\n " + trip.getPickupTime()
                     + "       | " + trip.getPickUpZone()
                     + "       " + trip.getEstimatedDistance() + "mi"
@@ -79,12 +78,6 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
                     .setTitle(trip.getPersonName())
                     .addText(new CarText.Builder(rowText).build())
                     .setOnClickListener(ParkedOnlyOnClickListener.create(() -> onTripClick(trip)));
-                    /*.setOnClickListener(ParkedOnlyOnClickListener.create(() -> CarToast.makeText(
-                                    getCarContext(),
-                                    "Trip details for " + trip.getPersonName(),
-                                    CarToast.LENGTH_SHORT)
-                            .show()));*/
-
             listBuilder.addItem(rowBuilder.build());
 
             /*Row.Builder rowBuilder = new Row.Builder()
@@ -92,13 +85,7 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
                     .setTitle(trip.getPersonName()) // Assuming getPUPerson() exists in your Trip class
                     .addText(trip.getPickupTime())
                     .addText(trip.getPickUpZone())
-                    .setOnClickListener(ParkedOnlyOnClickListener.create(() -> onTripClick(trip)));*/
-                    /*.setOnParkedOnlyClickListener(
-                            () -> CarToast.makeText(
-                                            getCarContext(),
-                                            "Trip details for " + trip.getPersonName(),
-                                            CarToast.LENGTH_SHORT)
-                                    .show());
+                    .setOnClickListener(ParkedOnlyOnClickListener.create(() -> onTripClick(trip)));
             listBuilder.addItem(rowBuilder.build());*/
         }
         return new ListTemplate.Builder()
@@ -107,16 +94,6 @@ public final class TripListScreen extends Screen implements DefaultLifecycleObse
                 .setHeaderAction(Action.BACK)
                 .build();
     }
-
-    /*private Row createTripRow(MyTrip trip) {
-        return new Row.Builder()
-                .setOnClickListener(ParkedOnlyOnClickListener.create(() -> onTripClick(trip)))
-                .setImage(new CarIcon.Builder(mIcon).build(), Row.IMAGE_TYPE_SMALL)
-                .setTitle(trip.getPersonName())
-                .setImage(new CarIcon.Builder(mIcon).build(), Row.IMAGE_TYPE_SMALL)
-                .addText("Details: " + trip.getAmbulatoryPassengerCount()) // Add relevant details
-                .build();
-    }*/
 
     private IconCompat getTripStatusIcon(MyTrip trip) {
         // Implement logic to get the appropriate icon based on trip status

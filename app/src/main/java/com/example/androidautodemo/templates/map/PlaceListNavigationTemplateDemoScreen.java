@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2021 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.example.androidautodemo.nevigationtemplate;
+package com.example.androidautodemo.templates.map;
 
 import static androidx.car.app.CarToast.LENGTH_SHORT;
 
@@ -28,11 +12,9 @@ import androidx.car.app.model.CarIcon;
 import androidx.car.app.model.Header;
 import androidx.car.app.model.Template;
 import androidx.car.app.navigation.model.PlaceListNavigationTemplate;
-
 import androidx.core.graphics.drawable.IconCompat;
 
 import com.example.androidautodemo.R;
-import com.example.androidautodemo.nevigationtemplate.common.SamplePlaces;
 import com.example.androidautodemo.nevigationtemplate.routing.RoutingDemoModels;
 
 /** Creates a screen using the {@link PlaceListNavigationTemplate} */
@@ -75,7 +57,7 @@ public final class PlaceListNavigationTemplateDemoScreen extends Screen {
                         })
                         .build())
                 .addEndHeaderAction(new Action.Builder()
-                        .setOnClickListener(() -> finish())
+                        .setOnClickListener(this::finish)
                         .setIcon(
                                 new CarIcon.Builder(
                                         IconCompat.createWithResource(

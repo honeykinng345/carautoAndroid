@@ -31,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
         btnTripList.setOnClickListener(view -> {
             List<MyTrip> tripList = new ArrayList<>();
             // Add dummy trips to the list
-            MyTrip trip1 = new MyTrip("John Doe", "01446051", "PickedUp", "Jan-14-2024", "Jan-14-2024", "07:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 1, 49.10, 3.1);
-            MyTrip trip2 = new MyTrip("Jane Smith", "01446054", "AtLocation", "Jan-16-2024", "Jan-14-2024", "09:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 4, 32.9, 4.3);
-            MyTrip trip3 = new MyTrip("Ruben Jimenez", "01446073", "IRTPU", "Jan-16-2024", "Jan-14-2024", "09:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 3, 32.6, 4.3);
+            MyTrip trip1 = new MyTrip("John Doe", "028004166", getString(R.string.trip_irtpu), "Jan-14-2024", "Jan-14-2024", "07:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 1, 49.10, 3.1);
+            MyTrip trip2 = new MyTrip("Jane Smith", "028004167", getString(R.string.trip_at_location), "Jan-16-2024", "Jan-14-2024", "09:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 4, 32.9, 4.3);
+            MyTrip trip3 = new MyTrip("Ruben Jimenez", "028004168", getString(R.string.trip_pick_up), "Jan-16-2024", "Jan-14-2024", "09:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 3, 32.6, 4.3);
+            MyTrip trip4 = new MyTrip("Saqib Latif", "028004169", getString(R.string.trip_picked_up), "Jan-16-2024", "Jan-14-2024", "09:25 PM", "Lahore(Punjab)", "Lahore(Punjab)", 3, 32.6, 4.3);
+
             trip1.setPhoneNumber("03447161273");
-            trip1.setServiceId("12345");
+            trip1.setServiceId("3617124");
+            trip1.setManifestNumber("");
             trip1.setParatransitCount(1);
             trip1.setPickUpPoiName("poi");
             trip1.setPickUpAddress("airport Lahore, Punjab Pakistan");
@@ -47,10 +50,11 @@ public class MainActivity extends AppCompatActivity {
             trip1.setDropOffRemarks("Drop me near LA");
             trip1.setPaymentType("Cash");
             trip1.setFundingSource("Self");
-            trip1.setCopay("0.00");
+            trip1.setCopay(10.00);
 
             trip2.setPhoneNumber("03447161273");
-            trip2.setServiceId("12345");
+            trip2.setServiceId("3617125");
+            trip2.setManifestNumber("");
             trip2.setParatransitCount(2);
             trip2.setPickUpPoiName("poi");
             trip2.setPickUpAddress("Lahore, Punjab Pakistan");
@@ -62,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
             trip2.setDropOffRemarks("Drop me near LA");
             trip2.setPaymentType("Cash");
             trip2.setFundingSource("Self");
-            trip2.setCopay("0.00");
-
+            trip2.setCopay(0.00);
 
             trip3.setPhoneNumber("03447161273");
-            trip3.setServiceId("12345");
+            trip3.setServiceId("3617126");
+            trip3.setManifestNumber("");
             trip3.setParatransitCount(3);
             trip3.setPickUpPoiName("poi");
             trip3.setPickUpAddress("Lahore, Punjab Pakistan");
@@ -78,12 +82,28 @@ public class MainActivity extends AppCompatActivity {
             trip3.setDropOffRemarks("Drop me near LA");
             trip3.setPaymentType("Cash");
             trip3.setFundingSource("Self");
-            trip3.setCopay("0.00");
+            trip3.setCopay(5.00);
 
+            trip4.setPhoneNumber("03447161273");
+            trip4.setServiceId("3617127");
+            trip4.setManifestNumber("45365");
+            trip4.setParatransitCount(3);
+            trip4.setPickUpPoiName("poi");
+            trip4.setPickUpAddress("Lahore, Punjab Pakistan");
+            trip4.setPickUpUnit("Unit#");
+            trip4.setPickUpRemarks("It is good place to visit");
+            trip4.setDropOffPoiName("poi");
+            trip4.setDropOffAddress("Model Town Lahore");
+            trip4.setDropOffUnit("Unit#");
+            trip4.setDropOffRemarks("Drop me near LA");
+            trip4.setPaymentType("Cash");
+            trip4.setFundingSource("Self");
+            trip4.setCopay(0.00);
 
             tripList.add(trip1);
             tripList.add(trip2);
             tripList.add(trip3);
+            tripList.add(trip4);
             // Add more dummy trips as needed
 
             CarScreen.screenManager
@@ -101,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
 //                                        0));
         });
 
-        stopNavButton.setOnClickListener(view-> CarScreen.screenManager
+        stopNavButton.setOnClickListener(view -> CarScreen.screenManager
                 .push(new FloatingSoftmeterScreen(CarScreen.carContextThis)));
-        startNavButton.setOnClickListener(view-> CarScreen.screenManager
+        startNavButton.setOnClickListener(view -> CarScreen.screenManager
                 .push(new FloatingSoftmeterOldScreen(CarScreen.carContextThis)));
 
         new CarConnection(this).getType().observe(this,

@@ -4,6 +4,7 @@ public class MyTrip {
     String personName;
     String phoneNumber;
     String confirmationNumber;
+    String manifestNumber;
     String serviceId;
     String tripStatus;
     String pickupTime;
@@ -21,7 +22,6 @@ public class MyTrip {
     String fundingSource;
     String pickUpZone;
     String dropZone;
-    String copay;
 
     Boolean airport;
     Boolean ambulatory;
@@ -31,6 +31,7 @@ public class MyTrip {
     int ambulatoryPassengerCount;
     double estimatedCost;
     double estimatedDistance;
+    double copay;
 
     public MyTrip(String personName, String confirmationNumber, String tripStatus, String pickupDate, String dropOffDate, String pickupTime, String pickUpZone, String dropZone, int ambulatoryPassengerCount, double estimatedCost, double estimatedDistance) {
         this.personName = personName;
@@ -60,6 +61,14 @@ public class MyTrip {
 
     public void setConfirmationNumber(String confirmationNumber) {
         this.confirmationNumber = confirmationNumber;
+    }
+
+    public String getManifestNumber() {
+        return manifestNumber;
+    }
+
+    public void setManifestNumber(String manifestNumber) {
+        this.manifestNumber = manifestNumber;
     }
 
     public String getPickupDate() {
@@ -231,11 +240,11 @@ public class MyTrip {
         this.fundingSource = fundingSource;
     }
 
-    public String getCopay() {
+    public double getCopay() {
         return copay;
     }
 
-    public void setCopay(String copay) {
+    public void setCopay(double copay) {
         this.copay = copay;
     }
 
