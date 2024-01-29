@@ -4,6 +4,7 @@ package com.example.androidautodemo.templates.softmeter;
 import static androidx.car.app.CarToast.LENGTH_LONG;
 import static androidx.car.app.CarToast.LENGTH_SHORT;
 import static androidx.car.app.model.Action.FLAG_PRIMARY;
+import static androidx.car.app.model.CarColor.GREEN;
 import static androidx.car.app.model.CarColor.RED;
 import static com.example.androidautodemo.templates.tripdetail.TripDetailScreen.getColoredString;
 
@@ -28,13 +29,15 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.example.androidautodemo.R;
 
+import java.util.Locale;
+
 /**
  * Creates a screen that demonstrates usage of the full screen {@link PaneTemplate} to display a
  * details screen.
  */
 public final class FloatingSoftmeterOldScreen extends Screen implements DefaultLifecycleObserver {
     private CarColor noTint;
-    private CarIcon ivStartTimeTicks, ivStopTimeTicks, ivSpeakerON, ivSpeakerOFF, ivIncreaseExtra, ivDecreaseExtra;
+    private CarIcon ivStopTimeTicks, ivSpeakerOFF, ivIncreaseExtra, ivDecreaseExtra;
 
     public FloatingSoftmeterOldScreen(@NonNull CarContext carContext) {
         super(carContext);
@@ -47,8 +50,6 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
         ivIncreaseExtra = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.collapse_icon)).build();
         ivDecreaseExtra = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.expand_icon)).build();
         ivStopTimeTicks = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.checkbox_on)).build();
-        ivStartTimeTicks = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.checkbox_off)).build();
-        ivSpeakerON = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_volume_up_24)).build();
         ivSpeakerOFF = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ic_baseline_volume_off_24)).build();
     }
 
@@ -64,7 +65,8 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
                 //.addText("0.00                                                   0.00")
                 .setImage(new CarIcon.Builder(ivSpeakerOFF).build())
                 .build());
-        paneBuilder.addRow(new Row.Builder().setTitle("Time Ticks").setImage(ivStopTimeTicks).build());
+        //paneBuilder.addRow(new Row.Builder().setTitle("Time Ticks").setImage(ivStopTimeTicks).build());
+        paneBuilder.addRow(createTimeDistanceSurcharge(0.00));
         //paneBuilder.addRow(new Row.Builder().setTitle("DIST OFF").setOnClickListener(this::distOFF).build());
         paneBuilder.addRow(new Row.Builder().setTitle("0.00 Mi         0.00 Min").build());
         Action.Builder primaryActionBuilder = new Action.Builder()
@@ -117,6 +119,17 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
                                 .build())
                 .setTitle("Softmeter")
                 .build();
+    }
+
+    private Row createTimeDistanceSurcharge(double surValue) {
+        String surchargeValue = surValue > 0.00 ? String.format(Locale.US, "Surcharge: %.2f", surValue) : "";
+        Row.Builder rowBuilder = new Row.Builder()
+                .setTitle("Time Ticks                  " + surchargeValue)
+                .setImage(ivStopTimeTicks);
+        /*if (surValue > 0.00) {
+            rowBuilder.addText(getColoredString("Surcharge: " + surchargeValue, GREEN, true));
+        }*/
+        return rowBuilder.build();
     }
 
     private void increaseExtra() {

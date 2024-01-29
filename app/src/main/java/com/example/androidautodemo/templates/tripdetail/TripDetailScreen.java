@@ -36,7 +36,7 @@ import java.util.Locale;
 
 public final class TripDetailScreen extends Screen implements DefaultLifecycleObserver {
     private static final int MAX_LIST_ITEMS = 100;
-    private CarIcon ivTripStatus, ivPickUpNavigate, ivDropOffNavigate, ivSoftmeter, ivAirPort, ivAmbulatory, ivWheelChair;
+    private CarIcon ivTripStatus, ivPickUpNavigate, ivDropOffNavigate, ivSoftmeter;
     private CarColor noTint;
     private final MyTrip currentTrip;
 
@@ -56,22 +56,8 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         noTint = CarColor.createCustom(Color.TRANSPARENT, Color.TRANSPARENT);
         ivSoftmeter = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.softmeter)).build();
         ivTripStatus = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.status_default)).build();
-        ivAirPort = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.airport_1)).build();
-        ivAmbulatory = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ambulatory_1)).build();
-        ivWheelChair = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.paratransit_1)).build();
         ivPickUpNavigate = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.pupin)).build();
         ivDropOffNavigate = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.dopin)).build();
-
-        if (currentTrip.getAmbulatoryPassengerCount() != 0) {
-            ivAmbulatory = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.ambulatory_2)).build();
-        }
-        if (currentTrip.getParatransitCount() != 0) {
-            ivWheelChair = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.paratransit_2)).build();
-        }
-
-        if (currentTrip.getPickUpAddress().toLowerCase().contains("airport") || currentTrip.getDropOffAddress().toLowerCase().contains("airport")) {
-            ivAirPort = new CarIcon.Builder(IconCompat.createWithResource(getCarContext(), R.drawable.airport_2b)).build();
-        }
     }
 
     @NonNull
@@ -103,8 +89,8 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
     public Template onGetTemplate() {
         ActionStrip myActions = new ActionStrip.Builder()
                 .addAction(new Action.Builder()
-                        .setOnClickListener(this::atLocation)
-                        .setTitle("AtLocation")
+                        .setOnClickListener(this::tripAction)
+                        .setTitle(currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_picked_up)) ? getCarContext().getString(R.string.complete_trip) : currentTrip.getTripStatus())
                         .build())
                 .addAction(new Action.Builder()
                         .setIcon(new CarIcon.Builder(ivSoftmeter)
@@ -118,16 +104,25 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         String basicInfo = currentTrip.getConfirmationNumber() + "   " + currentTrip.getServiceId() + "   " + currentTrip.getPickupTime()
                 + "\nAmbulatory# " + currentTrip.getAmbulatoryPassengerCount() + "    Wheel Chair# " + currentTrip.getParatransitCount();
 
-        String pickUpRemarks = currentTrip.getPickUpUnit() + "   " + currentTrip.getPickUpAddress()
-                + "\n" + currentTrip.getPickUpRemarks();
-        String dropOffRemarks = currentTrip.getDropOffUnit() + "   " + currentTrip.getDropOffAddress()
-                + "\n" + currentTrip.getDropOffRemarks();
+        String pickUpRemarks = currentTrip.getPickUpUnit() + "   " + currentTrip.getPickUpAddress() + "\n" + currentTrip.getPickUpRemarks();
+        String dropOffRemarks = currentTrip.getDropOffUnit() + "   " + currentTrip.getDropOffAddress() + "\n" + currentTrip.getDropOffRemarks();
+        String pickupPoiName = currentTrip.getPickUpPoiName();
+        String dropPoiName = currentTrip.getDropOffPoiName();
+
+        if (pickupPoiName.isEmpty() || pickupPoiName.equalsIgnoreCase("poi")) {
+            pickupPoiName = "";
+            pickUpRemarks = currentTrip.getPickUpRemarks();
+        }
+
+        if (dropPoiName.isEmpty() || dropPoiName.equalsIgnoreCase("poi")) {
+            dropPoiName = "";
+            dropOffRemarks = currentTrip.getDropOffRemarks();
+        }
 
         ItemList.Builder itemListBuilder = new ItemList.Builder()
-                .addItem(createRow(ivTripStatus, currentTrip.getPersonName() + "(" + currentTrip.getPhoneNumber() + ")", basicInfo))
-                //.addItem(createRow(ivAmbulatory, String.valueOf(currentTrip.getAmbulatoryPassengerCount()), ""))
-                .addItem(createRow(ivPickUpNavigate, currentTrip.getDropOffPoiName(), pickUpRemarks))
-                .addItem(createRow(ivDropOffNavigate, currentTrip.getDropOffPoiName(), dropOffRemarks))
+                .addItem(createRow(ivTripStatus, currentTrip.getPersonName() + " (" + currentTrip.getPhoneNumber() + ")", basicInfo))
+                .addItem(createRow(ivPickUpNavigate, pickupPoiName.isEmpty() ? currentTrip.getPickUpAddress() : currentTrip.getPickUpPoiName(), pickUpRemarks))
+                .addItem(createRow(ivDropOffNavigate, dropPoiName.isEmpty() ? currentTrip.getDropOffAddress() : currentTrip.getDropOffPoiName(), dropOffRemarks))
                 .addItem(createPaymentAndFundingRow())
                 //.addItem(createRow(null, "Estimate", "$" + currentTrip.getEstimatedCost() + " and " + currentTrip.getEstimatedDistance() + "Mi"))
                 .addItem(createEstimatesAndCopay());
@@ -136,10 +131,8 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         ItemList.Builder tripActionsBuilder = new ItemList.Builder();
         //tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_notes)));
 
-        if (currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_picked_up))) {
-            tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.complete_trip)));
-        } else {
-            tripActionsBuilder.addItem(buildRow(currentTrip.getTripStatus()));
+        if (!currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_picked_up))) {
+            //tripActionsBuilder.addItem(buildRow(currentTrip.getTripStatus()));
             tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_no_show)));
             tripActionsBuilder.addItem(buildRow(getCarContext().getString(R.string.trip_call_out)));
         }
@@ -248,8 +241,16 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
         return R.drawable.banana;
     }
 
-    private void atLocation() {
-        CarToast.makeText(getCarContext(), "At location performed", LENGTH_LONG).show();
+    private void tripAction() {
+        if (currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_irtpu))) {
+            CarToast.makeText(getCarContext(), "IRTPU performed", LENGTH_LONG).show();
+        } else if (currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_at_location))) {
+            CarToast.makeText(getCarContext(), "At location performed", LENGTH_LONG).show();
+        } else if (currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_pick_up))) {
+            CarToast.makeText(getCarContext(), "Pick-Up performed", LENGTH_LONG).show();
+        } else if (currentTrip.getTripStatus().equalsIgnoreCase(getCarContext().getString(R.string.trip_picked_up))) {
+            CarToast.makeText(getCarContext(), "Move to payment screen performed", LENGTH_LONG).show();
+        }
     }
 
     private void callOut() {
