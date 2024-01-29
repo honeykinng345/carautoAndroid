@@ -57,8 +57,8 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
     @Override
     public Template onGetTemplate() {
         Pane.Builder paneBuilder = new Pane.Builder();
-        CharSequence fareExtra = getColoredString("0.00                                                   0.00", RED, true);
 
+        CharSequence fareExtra = getColoredString("0.00                                                   0.00", RED, true);
         paneBuilder.addRow(new Row.Builder()
                 .setTitle("Fare              For Hire              Extra")
                 .addText(fareExtra)
@@ -71,7 +71,7 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
         paneBuilder.addRow(new Row.Builder().setTitle("0.00 Mi         0.00 Min").build());
         Action.Builder primaryActionBuilder = new Action.Builder()
                 .setTitle(getCarContext().getString(R.string.meter_on))
-                .setBackgroundColor(CarColor.BLUE)
+                .setBackgroundColor(GREEN)
                 .setOnClickListener(
                         () -> CarToast.makeText(
                                         getCarContext(),

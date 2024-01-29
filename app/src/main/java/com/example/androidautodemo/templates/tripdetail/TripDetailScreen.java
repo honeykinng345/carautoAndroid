@@ -182,13 +182,14 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
             rowBuilder.setImage(icon);
         }
         rowBuilder.setOnClickListener(() -> {
-            if (title != null && !title.equalsIgnoreCase(currentTrip.getPickUpPoiName())) {
+            /*if (title != null && !title.equalsIgnoreCase(currentTrip.getPickUpPoiName())) {
                 onClick("Navigate to Map");
                 getScreenManager()
                         .push(
                                 new NavigationTemplateDemoScreen(
                                         getCarContext()));
-            } else if (title != null && title.equalsIgnoreCase(currentTrip.getDropOffPoiName())) {
+            } else*/
+            if (title != null && (title.equalsIgnoreCase(currentTrip.getDropOffPoiName()) || title.equalsIgnoreCase(currentTrip.getDropOffAddress()))) {
                 onClick("Navigate to Map for Drop-OFF");
                 CarScreen.screenManager
                         .push(new PlaceListNavigationTemplateDemoScreen(CarScreen.carContextThis));
