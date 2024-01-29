@@ -87,7 +87,7 @@ public final class FloatingSoftmeterOldScreen extends Screen implements DefaultL
                 .addAction(
                         new Action.Builder()
                                 .setTitle(getCarContext().getString(R.string.time_off))
-                                .setBackgroundColor(CarColor.BLUE)
+                                .setBackgroundColor(CarColor.createCustom(Color.GRAY, Color.GRAY))
                                 .setOnClickListener(
                                         () -> CarToast.makeText(
                                                         getCarContext(),
