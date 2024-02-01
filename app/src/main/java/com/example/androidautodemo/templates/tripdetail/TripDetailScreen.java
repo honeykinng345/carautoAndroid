@@ -28,8 +28,8 @@ import com.example.androidautodemo.CarScreen;
 import com.example.androidautodemo.R;
 import com.example.androidautodemo.nevigationtemplate.common.MyTrip;
 import com.example.androidautodemo.nevigationtemplate.common.Utils;
-import com.example.androidautodemo.templates.NavigationTemplateDemoScreen;
 import com.example.androidautodemo.templates.map.PlaceListNavigationTemplateDemoScreen;
+import com.example.androidautodemo.templates.map.PlaceListTemplateBrowseDemoScreen;
 import com.example.androidautodemo.templates.softmeter.FloatingSoftmeterOldScreen;
 
 import java.util.Locale;
@@ -182,17 +182,17 @@ public final class TripDetailScreen extends Screen implements DefaultLifecycleOb
             rowBuilder.setImage(icon);
         }
         rowBuilder.setOnClickListener(() -> {
-            /*if (title != null && !title.equalsIgnoreCase(currentTrip.getPickUpPoiName())) {
+            /*if (title != null && !(title.equalsIgnoreCase(currentTrip.getPickUpPoiName()) || title.equalsIgnoreCase(currentTrip.getPickUpAddress()))) {
                 onClick("Navigate to Map");
                 getScreenManager()
                         .push(
                                 new NavigationTemplateDemoScreen(
                                         getCarContext()));
-            } else*/
+            } else */
             if (title != null && (title.equalsIgnoreCase(currentTrip.getDropOffPoiName()) || title.equalsIgnoreCase(currentTrip.getDropOffAddress()))) {
                 onClick("Navigate to Map for Drop-OFF");
-                CarScreen.screenManager
-                        .push(new PlaceListNavigationTemplateDemoScreen(CarScreen.carContextThis));
+                CarScreen.screenManager.push(new PlaceListTemplateBrowseDemoScreen(CarScreen.carContextThis));
+                //CarScreen.screenManager.push(new PlaceListNavigationTemplateDemoScreen(CarScreen.carContextThis));
             }
         });
         return rowBuilder.build();

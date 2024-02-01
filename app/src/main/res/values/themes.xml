@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.AndroidAutoDemo" parent="Base.Theme.AndroidAutoDemo" />
+
+    <style name="CarAppTheme">
+        <item name="carColorPrimary">#ff41af6a</item>
+        <item name="carColorPrimaryDark">#ff41af6a</item>
+        <item name="carColorSecondary">#fff3b713</item>
+        <item name="carColorSecondaryDark">#fff3b713</item>
+    </style>
 </resources>

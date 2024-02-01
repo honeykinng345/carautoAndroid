@@ -128,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
         new CarConnection(this).getType().observe(this,
                 this::onConnectionStateUpdate);
-
-
     }
 
     private void onConnectionStateUpdate(Integer connectionState) {
@@ -149,10 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    private void helloButtonClick(View view) {
-
     }
 
     private void stopNavigation(View view) {

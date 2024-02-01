@@ -20,7 +20,7 @@ import androidx.car.app.versioning.CarAppApiLevels;
 import com.example.androidautodemo.R;
 
 public class LongMessageTemplateDemoScreen extends Screen {
-    protected LongMessageTemplateDemoScreen(@NonNull CarContext carContext) {
+    public LongMessageTemplateDemoScreen(@NonNull CarContext carContext) {
         super(carContext);
     }
 

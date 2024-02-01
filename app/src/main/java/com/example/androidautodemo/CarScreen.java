@@ -25,7 +25,7 @@ public class CarScreen extends Screen {
     public static ScreenManager screenManager = null;
     public static CarContext carContextThis = null;
 
-    protected CarScreen(@NonNull CarContext carContext) {
+    public CarScreen(@NonNull CarContext carContext) {
         super(carContext);
         carContextThis = carContext;
         screenManager = getScreenManager();

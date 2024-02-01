@@ -315,10 +315,10 @@ public class SamplePlaces {
     }
 
     private void onClickPlace(PlaceInfo place) {
-        onClickNavigate(place);
-        /*mDemoScreen
+        //onClickNavigate(place);
+        mDemoScreen
                 .getScreenManager()
-                .push(PlaceDetailsScreen.create(mDemoScreen.getCarContext(), place));*/
+                .push(PlaceDetailsScreen.create(mDemoScreen.getCarContext(), place));
     }
 
     private void onClickNavigate(PlaceInfo place) {
